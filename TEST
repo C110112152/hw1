@@ -1,0 +1,40 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity testbench is
+end testbench;
+
+architecture TB of testbench is
+    signal i_clk : std_logic := '0';
+    signal i_rst : std_logic := '0';
+    signal o_count1 : std_logic_vector(3 downto 0);
+    signal o_count2 : std_logic_vector(3 downto 0);
+
+    constant i_clk_period : time := 10 ns;
+begin
+    uut: entity work.two_counter
+        port map (
+            i_clk => i_clk,
+            i_rst => i_rst,
+            o_count1 => o_count1,
+            o_count2 => o_count2
+        );
+
+    i_clk_process : process
+    begin
+        i_clk <= '0';
+        wait for i_clk_period / 2;
+        i_clk <= '1';
+        wait for i_clk_period / 2;
+    end process;
+
+    stim_proc : process
+    begin
+        i_rst <= '0';
+        wait for 100 ns;
+        i_rst <= '1';
+        wait for i_clk_period * 20;
+        
+        wait;
+    end process;
+end TB;
